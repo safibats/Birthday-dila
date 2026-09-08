@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Her Special Day</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Sacramento&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #120914;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Ambient Sparkles Background */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .section {
+            display: none;
+            width: 100%;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .section.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography */
+        .sub-header {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 4px;
+            font-size: 0.85rem;
+            color: #d1b3c4;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sub-header::before, .sub-header::after {
+            content: '✦';
+            font-size: 0.6rem;
+            color: #ea9ab2;
+        }
+
+        .main-title {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #f7e7ce;
+            text-shadow: 0 0 20px rgba(247, 231, 206, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-style: italic;
+            font-size: 0.95rem;
+            color: #bfa3b5;
+            margin-bottom: 35px;
+            font-weight: 300;
+        }
+
+        /* Countdown Boxes */
+        .countdown-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+        }
+
+        .time-box {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 18px 22px;
+            min-width: 90px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .time-val {
+            font-size: 2.5rem;
+            font-weight: 600;
+            font-family: 'Cinzel', serif;
+            color: #ffffff;
+            display: block;
+        }
+
+        .time-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #a88fa2;
+            margin-top: 5px;
+        }
+
+        /* Romantic Button */
+        .btn-romantic {
+            background: linear-gradient(135deg, rgba(234, 154, 178, 0.2), rgba(186, 123, 152, 0.3));
+            border: 1px solid rgba(234, 154, 178, 0.5);
+            color: #fce4ec;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-romantic:hover {
+            background: rgba(234, 154, 178, 0.4);
+            border-color: rgba(234, 154, 178, 0.8);
+            box-shadow: 0 0 15px rgba(234, 154, 178, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Section 2: Gift Box Unboxing */
+        .gift-box {
+            font-size: 5rem;
+            cursor: pointer;
+            margin: 30px 0;
+            filter: drop-shadow(0 0 25px rgba(234, 154, 178, 0.4));
+            animation: pulse 2s infinite;
+            transition: transform 0.3s ease;
+        }
+
+        .gift-box:hover {
+            transform: scale(1.1) rotate(3deg);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Floating Polaroids Layout */
+        .polaroid-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            min-height: 420px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .polaroid-main-title {
+            position: absolute;
+            z-index: 2;
+        }
+
+        .polaroid {
+            position: absolute;
+            background: #fff;
+            padding: 8px 8px 25px 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            width: 110px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+        }
+
+        .polaroid:hover {
+            transform: scale(1.3) !important;
+            z-index: 10;
+            box-shadow: 0 15px 30px rgba(234, 154, 178, 0.5);
+        }
+
+        .p1 { top: 10%; left: 5%; transform: rotate(-12deg); }
+        .p2 { top: 5%; left: 25%; transform: rotate(8deg); }
+        .p3 { top: 12%; right: 25%; transform: rotate(-6deg); }
+        .p4 { top: 8%; right: 5%; transform: rotate(15deg); }
+        .p5 { bottom: 10%; left: 10%; transform: rotate(10deg); }
+        .p6 { bottom: 8%; right: 10%; transform: rotate(-14deg); }
+
+        /* Love Letter Container */
+        .letter-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 35px 30px;
+            max-width: 650px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            text-align: left;
+            margin: 20px 0;
+            line-height: 1.8;
+            font-size: 0.95rem;
+            color: #f3e5f5;
+        }
+
+        .letter-card h3 {
+            font-family: 'Cinzel', serif;
+            color: #ea9ab2;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+        }
+
+        .letter-card p {
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+
+        .signature {
+            font-family: 'Sacramento', cursive;
+            font-size: 1.8rem;
+            color: #ea9ab2;
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        /* Photo Grid */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 750px;
+            margin: 25px 0;
+        }
+
+        .photo-card {
+            background: #ffffff;
+            padding: 10px 10px 30px 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            transform: rotate(calc(var(--r, 0) * 1deg));
+            transition: transform 0.3s ease;
+        }
+
+        .photo-card:hover {
+            transform: scale(1.05) rotate(0deg);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        /* Video Container */
+        .video-box {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            margin: 25px 0;
+            background: #000;
+        }
+
+        .video-box video {
+            width: 100%;
+            display: block;
+        }
+
+        /* Floating Audio Toggle */
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Canvas for Floating Sparkles -->
+    <canvas id="canvas-bg"></canvas>
+
+    <!-- Music Button -->
+    <div class="music-btn" onclick="toggleAudio()" title="Toggle Background Music">🎵</div>
+
+    <div class="container">
+
+        <!-- SECTION 1: COUNTDOWN -->
+        <div id="sec-countdown" class="section active">
+            <div class="sub-header">MENGHITUNG HARI</div>
+            <h1 class="main-title">Her Special Day<br><span style="font-size: 2.2rem; font-weight: 300; font-family: 'Great Vibes', cursive;">is Coming</span></h1>
+            <p class="subtitle">There Something For You 💕</p>
+
+            <div class="countdown-container">
+                <div class="time-box">
+                    <span id="days" class="time-val">00</span>
+                    <span class="time-label">Hari</span>
+                </div>
+                <div class="time-box">
+                    <span id="hours" class="time-val">00</span>
+                    <span class="time-label">Jam</span>
+                </div>
+                <div class="time-box">
+                    <span id="minutes" class="time-val">00</span>
+                    <span class="time-label">Menit</span>
+                </div>
+                <div class="time-box">
+                    <span id="seconds" class="time-val">00</span>
+                    <span class="time-label">Detik</span>
+                </div>
+            </div>
+
+            <p id="countdown-subtext" style="font-size: 0.85rem; color: #bfa3b5; margin-bottom: 15px;">✨ Beberapa detik lagi... ✨</p>
+            <button id="btn-unlock" class="btn-romantic" onclick="goToSection('sec-gift')">
+                <span id="btn-text">🔒 TUNGGU SAMPAI WAKTUNYA</span>
+            </button>
+        </div>
+
+        <!-- SECTION 2: GIFT UNBOXING -->
+        <div id="sec-gift" class="section">
+            <div class="sub-header">THIS IS FOR YOU</div>
+            <div class="gift-box" onclick="goToSection('sec-intro')">🎁</div>
+            <p class="subtitle">Click To Open Your Gift ✨</p>
+        </div>
+
+        <!-- SECTION 3: HERO INTRO & POLAROIDS -->
+        <div id="sec-intro" class="section">
+            <div class="polaroid-wrapper">
+                <div class="polaroid p1"><img src="https://i.ibb.co/nsNnMDqk/3585bd8a-f8d8-4c4b-a68d-8d1884446938.jpg" alt="Memory"></div>
+                <div class="polaroid p2"><img src="https://i.ibb.co/FLHW5bTR/3dfbcf4f-7e3d-4528-9072-2d0bcf22580d.jpg" alt="Memory"></div>
+                <div class="polaroid p3"><img src="https://i.ibb.co/0yckmcXV/0e802959-9916-41fd-ab2e-4b8e85da8307.jpg" alt="Memory"></div>
+                <div class="polaroid p4"><img src="https://i.ibb.co/7tWVnx7G/689c8571-87c5-4451-b0c0-0e0e7996b936.jpg" alt="Memory"></div>
+                <div class="polaroid p5"><img src="https://i.ibb.co/XrVGLQ4n/66119203-8834-4621-9a5f-c7a095188b4a.jpg" alt="Memory"></div>
+                <div class="polaroid p6"><img src="https://i.ibb.co/VYPVzCkK/aae994b8-d9e0-47c2-a4b1-e5a08b987e60.jpg" alt="Memory"></div>
+
+                <div class="polaroid-main-title">
+                    <div class="sub-header">A LOVE LETTER FOR YOU</div>
+                    <h1 class="main-title">Your Special Day</h1>
+                    <p class="subtitle">Created with love, just for you</p>
+                    <button class="btn-romantic" onclick="goToSection('sec-letter')">READ OUR LETTER 💌</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 4: LOVE LETTER -->
+        <div id="sec-letter" class="section">
+            <h1 class="main-title" style="font-size: 2.5rem;">Happy Birthday</h1>
+            <div class="letter-card">
+                <h3>HAPPY BIRTHDAY DILAAKUUUU💕</h3>
+                <p>Selamat menetas Dilalalilalilala, lambat betul kamu 18, BATT and ABBY doakan semoga dila bahagia selalu, jadi anak solehah kpd kedua ibu bapa,semoga dila dilimpahkan rezeki,sihat selalu,sentiasa jadi orang baik,diberi lindungan dari perkara jahat dan sentiasa kuat.</p>
+                <p>Batt and Abby bersyukur dapat kenal dengan orang yang baek macam dila ni hehe, Dila tetap semangat oke ikut laa time kerja ke duk saja ke blaja ke, pape lah sebb Batt and Abby sentiasa ada and sentiasa support ADILA SEFIA, sweet kang kitorg .</p>
+                <p>Di umur yang baru ni, kami harap dila sentiasa jadi diri sendiri seperti dila yang sekarang la kut sbb xtau dila real tu gane HAHAHAHAHA, dila kalu suatu hari nanti kita ikut haluan masing" jangan pernah lupakan Batt and Abby tau Dila hehe,tq kwn ngan kitorg.</p>
+                <p>Dila kalu Dila ada masalah ke ape ke xtau nk cerita ke sape,kitorg ade hehe kut" blh jadi rumah kelima Dila HAHAHAHAHAH sebb rumah pertama family, rumah kedua just prend, rumah ketiga kwn kamu, rumah keempat kwn kamu lagi la kut and rumah kelima ialah kami HAHAHAHAHA.</p>
+                <p>Sekali lagi, selamat menetas ADILA SEFIA,Batt and Abby xmampu bagi hadiah mahal" lagi tapi kalu kedepan kita masih berkwn maybe saya akan beli, sorry tau, disbbkn 09/09 ni hari special dila batt bagi kata" sweet laa sikit. i love you Dila,bluerkk HAHAHAHAHA.</p>
+                <div class="signature">I love you, today, tomorrow, and always 💖</div>
+            </div>
+            <button class="btn-romantic" onclick="goToSection('sec-memories')">OUR MEMORIES 📷</button>
+        </div>
+
+        <!-- SECTION 5: PHOTO GALLERY -->
+        <div id="sec-memories" class="section">
+            <div class="sub-header">OUR MEMORIES</div>
+            <p class="subtitle">Every moment captured in love ✨</p>
+            
+            <div class="photo-grid">
+                <div class="photo-card" style="--r: -3"><img src="https://i.ibb.co/cccc8WCf/719f96dd-0913-41f0-9b4d-c18f537b5901.jpg" alt="Memory 1"></div>
+                <div class="photo-card" style="--r: 2"><img src="https://i.ibb.co/WpFM78Bp/bb8a71bb-a3cf-4559-bdac-6064b1058032.jpg" alt="Memory 2"></div>
+                <div class="photo-card" style="--r: -2"><img src="https://i.ibb.co/9mZCshFd/5d384a8a-d3cc-4eb4-bdea-1d8a50a7ad1c.jpg" alt="Memory 3"></div>
+                <div class="photo-card" style="--r: 4"><img src="https://i.ibb.co/BH0RMtLg/f156955c-dc5b-446e-a190-857696a5d1b9.jpg" alt="Memory 4"></div>
+                <div class="photo-card" style="--r: -4"><img src="https://i.ibb.co/mLfscMJ/82b3e6de-3095-4fe5-a2d4-f86cba707cdc.jpg" alt="Memory 5"></div>
+                <div class="photo-card" style="--r: 3"><img src="https://i.ibb.co/wrgdKk23/0982e221-a5a4-4d51-b0c1-b206786154b3.jpg" alt="Memory 6"></div>
+            </div>
+
+            <button class="btn-romantic" onclick="goToSection('sec-video')">WATCH VIDEO 🎬</button>
+        </div>
+
+        <!-- SECTION 6: VIDEO MESSAGE -->
+        <div id="sec-video" class="section">
+            <div class="sub-header">A MOMENT FOR YOU</div>
+            <p class="subtitle">A special video message 💖</p>
+            
+            <div class="video-box">
+                <video controls poster="https://i.ibb.co/wrgdKk23/0982e221-a5a4-4d51-b0c1-b206786154b3.jpg">
+                    <source src="birthday-dila.mp4.MOV" type="video/quicktime">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+
+            <button class="btn-romantic" onclick="goToSection('sec-wishes')">BIRTHDAY WISHES 🌟</button>
+        </div>
+
+        <!-- SECTION 7: BIRTHDAY WISHES -->
+        <div id="sec-wishes" class="section">
+            <div class="sub-header">BIRTHDAY WISHES</div>
+            <div class="letter-card" style="text-align: center;">
+                <h3 style="font-size: 1.5rem;">Happy Birthday, Adila Ku 💖</h3>
+                <p>I wish you happiness, good health, success, and endless blessings in this new chapter of your life. May all your dreams come true, your days be filled with joy, and your heart always find peace.</p>
+                <p>Thank you for being such a wonderful part of our life. I hope this year brings you everything you've been wishing for. Stay happy, stay healthy, and keep shining.</p>
+            </div>
+
+            <button class="btn-romantic" onclick="goToSection('sec-final')">ONE MORE THING ✨</button>
+        </div>
+
+        <!-- SECTION 8: FINAL OUTRO -->
+        <div id="sec-final" class="section">
+            <h1 class="main-title" style="font-size: 3rem;">With All Our Love</h1>
+            <p class="subtitle" style="max-width: 500px;">Thank you for being part of our life. I hope this little gift can make your special day even more beautiful.<br><br><strong>We Love You. 💕</strong></p>
+
+            <button class="btn-romantic" onclick="goToSection('sec-countdown')">↺ REPLAY FROM START</button>
+        </div>
+
+    </div>
+
+    <!-- Optional Audio Stream -->
+    <audio id="bg-music" loop>
+        <source src="birthday-song.m4a.m4a" type="audio/mp4">
+    </audio>
+
+    <script>
+        // Section Navigation
+        function goToSection(sectionId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            const target = document.getElementById(sectionId);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Countdown Timer Logic (Set target 10s into the future for demonstration)
+        const targetDate = new Date().getTime() + 10000; 
+
+        const countdownInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('days').innerText = "00";
+                document.getElementById('hours').innerText = "00";
+                document.getElementById('minutes').innerText = "00";
+                document.getElementById('seconds').innerText = "00";
+                
+                document.getElementById('countdown-subtext').innerText = "Hari ini adalah hari menetas kamu! 🎉";
+                const btn = document.getElementById('btn-unlock');
+                btn.style.background = "linear-gradient(135deg, #ea9ab2, #ba7b98)";
+                btn.style.borderColor = "#ffffff";
+                document.getElementById('btn-text').innerText = "🎁 OPEN HER GIFT";
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = String(d).padStart(2, '0');
+            document.getElementById('hours').innerText = String(h).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(m).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(s).padStart(2, '0');
+        }, 1000);
+
+        // Particle Background
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = -Math.random() * 0.5 - 0.2;
+                this.opacity = Math.random();
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.y < 0) {
+                    this.y = canvas.height;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(234, 154, 178, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 70; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // Audio Controls
+        const audio = document.getElementById('bg-music');
+        let isPlaying = false;
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+            } else {
+                audio.play().catch(() => {});
+                isPlaying = true;
+            }
+        }
+    </script>
+</body>
+</html>
